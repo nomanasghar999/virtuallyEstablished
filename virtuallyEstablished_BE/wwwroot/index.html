@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtually Home</title>
+</head>
+<body>
+    <div>
+        <h1>Virtually Home, A life of Masters Student, struggling with Web Development... </h1>
+        <p>Stay tuned to monitor the evolution of the website...</p>
+        <p>Please leave your suggestions for improvements in UI/UX and help me with funds via PayPal (if possible).</p>
+    </div>
+    <br>
+    <div>
+        <form id="form">
+            <label for="commentBox">Write your comments (up to 1000 words):</label><br>
+            <textarea id="commentBox" rows="10" cols="50" placeholder="Type your comments here..."></textarea>
+            <div id="wordCount">Word count: 0 / 1000</div>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const commentBox = document.getElementById('commentBox');
+        const wordCount = document.getElementById('wordCount');
+
+        // Track word count as the user types
+        commentBox.addEventListener('input', () => {
+            const text = commentBox.value.trim();
+            const wordArray = text.split(/\s+/);
+            const count = wordArray.filter(word => word.length > 0).length; // Count valid words
+            wordCount.textContent = `Word count: ${count} / 1000`;
+        });
+
+        // Handle form submission
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const suggestion = commentBox.value.trim();
+
+            if (suggestion.length === 0) {
+                alert("Please write a suggestion before submitting.");
+                return;
+            }
+
+            // Sending POST request using fetch
+            const data = { suggestion: suggestion };
+
+            fetch('https://localhost:7043/api', {
+                method: 'POST', // HTTP method
+                headers: {
+                    'Content-Type': 'application/json', // Specifies the request body format
+                },
+                body: JSON.stringify(data) // Convert data to JSON string
+            })
+            .then(response => response.json()) // Parse the JSON response from the server
+            .then(data => {
+                console.log('Success:', data); // Handle the success response
+                alert('Your suggestion has been submitted!');
+                commentBox.value = ''; // Clear the comment box after submission
+                wordCount.textContent = 'Word count: 0 / 1000'; // Reset word count
+            })
+            .catch(error => {
+                console.error('Error:', error); // Handle errors
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
