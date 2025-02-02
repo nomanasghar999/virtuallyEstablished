@@ -12,6 +12,7 @@ namespace virtuallyEstablished_BE
         {
             try
             {
+                Console.WriteLine("Hello");
                 return Ok(new { Message = "Data saved successfully!" });
             }
             catch (Exception ex)
